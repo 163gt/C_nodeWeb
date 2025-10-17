@@ -60,7 +60,7 @@ export const getRoleList = async (req: Request, res: Response) => {
     // 获取分页参数
     const { page = -1, pageSize = -1, roleName } = req.query; // 默认值为 -1 表示查询所有数据
     const pageNo = Number(page);
-    const size = Number(pageSize);
+    const size = Number(pageSize);    
 
     try {
         const roleRepository = AppDataSource.getRepository(SysRole)
@@ -68,14 +68,15 @@ export const getRoleList = async (req: Request, res: Response) => {
         const whereConditions: any = {}; // 默认查询所有状态为1的路由
         // 如果传递了 roleName 参数，则根据菜单名称进行模糊查询
         if (roleName) {
-            whereConditions.title = Like(`%${roleName}%`); // 使用 Like 进行模糊匹配
+            whereConditions.roleName = Like(`%${roleName}%`); // 使用 Like 进行模糊匹配
         }
-
         // 查询所有符合条件的数据
         const roleData = await roleRepository.find({
             where: whereConditions,
             order: { id: "ASC" } // 按 id 排序
-        });
+        });        
+        
+
         // 使用 paginateData 进行分页裁剪
         const paginatedRole = paginateData(roleData, pageNo, size);
 
