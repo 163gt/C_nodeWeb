@@ -1,8 +1,8 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("idx_uploadedBy", ["uploadedBy"], {})
 @Index("idx_createdAt", ["createdAt"], {})
 @Index("idx_filename", ["filename"], {})
+@Index("idx_uploadedBy", ["uploadedBy"], {})
 @Entity("files", { schema: "mydb" })
 export class Files {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

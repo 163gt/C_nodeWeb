@@ -105,22 +105,23 @@ export const createDictItem = async (req: Request, res: Response) => {
     const { dictionaryCode, label, value, status } = req.body;
     try {
         const DictItemRepository = AppDataSource.getRepository(SysDictionaryItem)
-
         // 查询是否已存在相同的 dictionaryCode
         const isDictionaryType = await DictItemRepository.findOne({
-            where: { label },
+            where: { dictionaryCode, label,value },
         });
         if (isDictionaryType) {
-            res.status(400).json({
+            return res.status(400).json({
                 message: '字典标签已存在',
             });
         }
         // 创建新的字典类型对象
-        const newDictItem = new SysDictionaryItem();
-        newDictItem.dictionaryCode = dictionaryCode;
-        newDictItem.label = label;
-        newDictItem.value = value;
-        newDictItem.status = status;
+        const newDictItem = DictItemRepository.create({
+            dictionaryCode,
+            label,
+            value,
+            status,
+        });
+
         await DictItemRepository.save(newDictItem)
         res.status(200).json({
             message: '字典标签创建成功',
@@ -151,7 +152,7 @@ export const queryDictItem = async (req: Request, res: Response) => {
         }
         // 构建查询条件
         const whereConditions: any = { dictionaryCode: dictionaryCode };
-        
+
         // 如果传递了 label 参数，则根据菜单名称进行模糊查询
         if (label) {
             whereConditions.label = Like(`%${label}%`); // 使用 Like 进行模糊匹配

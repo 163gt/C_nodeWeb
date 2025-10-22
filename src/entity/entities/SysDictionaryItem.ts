@@ -8,8 +8,10 @@ import {
 } from "typeorm";
 import { SysDictionaryType } from "./SysDictionaryType";
 
-@Index("unique_label_value", ["label", "value"], { unique: true })
 @Index("dictionaryCode", ["dictionaryCode"], {})
+@Index("unique_label_value", ["dictionaryCode", "label", "value"], {
+  unique: true,
+})
 @Entity("sys_dictionary_item", { schema: "mydb" })
 export class SysDictionaryItem {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

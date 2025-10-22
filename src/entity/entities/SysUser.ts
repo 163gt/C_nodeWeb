@@ -1,9 +1,9 @@
 import { Column, Entity, Index } from "typeorm";
 
-@Index("userName", ["userName"], { unique: true })
 @Index("IDX_f6a2048fab3882df93b31edfa2", ["userName"], { unique: true })
-@Index("idx_username", ["userName"], {})
 @Index("idx_phone", ["phoneNumber"], {})
+@Index("idx_username", ["userName"], {})
+@Index("userName", ["userName"], { unique: true })
 @Entity("sys_user", { schema: "mydb" })
 export class SysUser {
   @Column("char", {

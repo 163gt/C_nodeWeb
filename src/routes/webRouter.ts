@@ -4,6 +4,7 @@ import webUserRouter from '../controllers/web/webUser/webUserRouter';
 import webRouters from '../controllers/web/webRouters/webRouters';
 import webRoleRouters from '../controllers/web/webRole/webRoleRouter';
 import DictionaryRouters from '../controllers/web/webDictionary/webDictionaryRouter';
+import apiKeyRouter from '../controllers/web/model/apiKeyRouter';
 const webRouter = Router();
 
 // 添加请求日志中间件
@@ -20,6 +21,8 @@ webRouter.use(webRouters);
 webRouter.use(webRoleRouters);
 //web字典
 webRouter.use(DictionaryRouters);
+//模型API Key
+webRouter.use(apiKeyRouter);
 
 
 // // 调试：记录未匹配的请求

@@ -1,9 +1,9 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("user_id", ["userId"], { unique: true })
+@Index("IDX_0fda9260b0aaff9a5b8f38ac16", ["openid"], { unique: true })
 @Index("IDX_758b8ce7c18b9d347461b30228", ["userId"], { unique: true })
 @Index("openid", ["openid"], { unique: true })
-@Index("IDX_0fda9260b0aaff9a5b8f38ac16", ["openid"], { unique: true })
+@Index("user_id", ["userId"], { unique: true })
 @Entity("user", { schema: "mydb" })
 export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

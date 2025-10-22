@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("sessionId", ["sessionId"], { unique: true })
 @Index("IDX_ca75b6f99217818cce84f7d67b", ["sessionId"], { unique: true })
+@Index("sessionId", ["sessionId"], { unique: true })
 @Entity("chat_session", { schema: "mydb" })
 export class ChatSession {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id" })

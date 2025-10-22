@@ -1,9 +1,9 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("roleCode", ["roleCode"], { unique: true })
 @Index("IDX_a5c291366b4706c62dcd5239c8", ["roleCode"], { unique: true })
-@Index("UQ_roleName", ["roleName"], { unique: true })
 @Index("IDX_b806c4ab49ff08434c25d2f967", ["roleName"], { unique: true })
+@Index("roleCode", ["roleCode"], { unique: true })
+@Index("UQ_roleName", ["roleName"], { unique: true })
 @Entity("sys_role", { schema: "mydb" })
 export class SysRole {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
