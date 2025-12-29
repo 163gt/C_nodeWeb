@@ -50,6 +50,7 @@ export const queryApiKeyController = async (req: Request, res: Response) => {
             .select([
                 'apiKey.id',
                 'apiKey.modelKeyName',
+                'apiKey.apiKeyValue',
                 'apiKey.baseUrl',
                 'apiKey.apiKeyDesc',
                 'apiKey.status',
@@ -74,4 +75,21 @@ export const queryApiKeyController = async (req: Request, res: Response) => {
         console.error(error);
         res.status(500).json({ message: 'API Key 查询失败', error });
     }
+}
+
+/**
+ * 修改API Key信息
+ */
+export const updateApiKeyController = async (req: Request, res: Response) => {
+    const { id, modelKeyName, apiKeyValue, baseUrl, apiKeyDesc, status } = req.body;
+    const apiKeyRepository = AppDataSource.getRepository(ModelApikey);
+    try {
+        
+
+    } catch (error) {
+        res.status(500).json({
+            message: 'API Key 修改失败',
+        });
+    }
+
 }
