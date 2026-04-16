@@ -269,14 +269,14 @@ export const refUserToken = async (req: Request, res: Response) => {
  * 删除用户（修复：使用 params 获取 userId）
  */
 export const deleteUser = async (req: Request, res: Response) => {
-    const userId = req.params.userId;  // 从 params 获取
+    const userId = req.params.userId;
     try {
         const userRepository = AppDataSource.getRepository(SysUser);
         const userInfo = await userRepository.findOneBy({ userId: String(userId) });
         if (!userInfo) {
             return res.status(404).json({ success: false, message: '用户不存在' });
         }
-        const userRoleCode: string[] = userInfo.roleCode as string[];
+        const userRoleCode: string[] = (userInfo.roleCode as string[]) || [];
         const hasSuperAdmin = userRoleCode.includes('SuperAdmin');
         if (hasSuperAdmin) {
             return res.status(400).json({ message: '超级管理员无法删除' })
@@ -284,6 +284,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         await userRepository.delete(String(userId));
         res.status(200).json({ message: '用户删除成功' });
     } catch (error) {
+        console.error('删除用户错误:', error);
         res.status(500).json({ message: '用户删除失败' });
     }
 };

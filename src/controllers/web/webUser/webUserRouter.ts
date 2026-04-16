@@ -24,7 +24,7 @@ webUserRouter.get('/getUserList', verifyToken, getUserList)
 //刷新token
 webUserRouter.post('/refreshToken', refUserToken)
 
-//删除用户（改为 DELETE 请求）
-webUserRouter.delete('/:userId', verifyToken, deleteUser)
+//删除用户（改为 DELETE 请求，路径改为 /deleteUser/:userId 避免冲突）
+webUserRouter.delete('/deleteUser/:userId', verifyToken, deleteUser)
 
 export default webUserRouter;
