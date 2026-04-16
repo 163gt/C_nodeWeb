@@ -1,9 +1,21 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express'; // 补充类型引入
+import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// 生产环境必须设置 JWT_SECRET
+if (!JWT_SECRET && process.env.NODE_ENV === 'production') {
+    throw new Error('❌ 生产环境必须设置 JWT_SECRET 环境变量');
+}
+
+// 开发环境使用默认值（仅提示警告）
+if (!JWT_SECRET) {
+    console.warn('⚠️ 警告: JWT_SECRET 未设置，使用默认密钥（仅限开发环境）');
+}
+
+const _JWT_SECRET = JWT_SECRET || 'dev_only_secret_do_not_use_in_production';
 const JWT_EXPIRES_IN: string = String(process.env.JWT_EXPIRES_IN) || '1h';
 const MAX_REFRESH_WINDOW = 24 * 60 * 60; // 24小时（单位：秒）
 
@@ -23,7 +35,7 @@ export function generateToken(
   if (!payload || typeof payload !== 'object' && typeof payload !== 'string' && !Buffer.isBuffer(payload)) {
     throw new Error('payload 必须为非空对象、字符串或 Buffer');
   }
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: expiresIn as any });
+  return jwt.sign(payload, _JWT_SECRET, { expiresIn: expiresIn as any });
 }
 
 /**
@@ -72,7 +84,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     }
 
     // 3. 验证签名（如果未过期）
-    const verified = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const verified = jwt.verify(token, _JWT_SECRET) as JwtPayload;
     (req as any).user = verified;
     next();
   } catch (error) {

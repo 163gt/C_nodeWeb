@@ -8,8 +8,7 @@ import bcrypt from 'bcrypt';
 import { paginateData } from '../../../utils/page';
 import { Like } from 'typeorm';
 
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || 'dev_only_secret_do_not_use_in_production';
 const saltRounds = 12;
 
 /**
@@ -212,9 +211,7 @@ export const getUserList = async (req: Request, res: Response) => {
 
 
 /**
- * 刷新token
- * @param req 
- * @param res 
+ * 刷新token（修复：验证用户是否存在）
  */
 export const refUserToken = async (req: Request, res: Response) => {
     const tokenOld = req.headers.authorization;
@@ -245,8 +242,23 @@ export const refUserToken = async (req: Request, res: Response) => {
         if (!userId) {
             res.status(401).json({ message: 'token刷新失败' });
         }
-        // 密码匹配，生成 token
-        const token = generateToken({ userId: userId });
+
+        // 3. 验证用户是否存在（修复：防止已删除用户的token刷新）
+        const userRepository = AppDataSource.getRepository(SysUser);
+        const user = await userRepository.findOne({
+            where: { userId },
+            select: ['userId', 'userName']
+        });
+
+        if (!user) {
+            return res.status(401).json({ 
+                message: '用户不存在或已被删除',
+                allowRefresh: false 
+            });
+        }
+
+        // 4. 生成新 token
+        const token = generateToken({ userId: user.userId });
         res.status(200).json({ token });
     } catch (error) {
         res.status(401).json({ message: 'token刷新失败' });
@@ -254,14 +266,10 @@ export const refUserToken = async (req: Request, res: Response) => {
 }
 
 /**
- * 删除用户
- * @param req 
- * @param res 
- * @returns 
+ * 删除用户（修复：使用 params 获取 userId）
  */
 export const deleteUser = async (req: Request, res: Response) => {
-    const adminUserId = (req as any).user.userId;
-    const { userId } = req.query;
+    const userId = req.params.userId;  // 从 params 获取
     try {
         const userRepository = AppDataSource.getRepository(SysUser);
         const userInfo = await userRepository.findOneBy({ userId: String(userId) });

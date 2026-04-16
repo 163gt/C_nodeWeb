@@ -75,27 +75,33 @@ export const querySessionList = async (req: Request, res: Response) => {
 };
 
 /**
- * 删除会话信息
- * @param req 
- * @param res 
+ * 删除会话信息（修复：先查询再删除）
  */
 export const deleteSession = async (req: Request, res: Response) => {
     try {
         const { sessionId } = req.body;
         const userId = (req as any).user.userId;
+        
+        if (!sessionId) {
+            return res.status(400).json({ message: 'sessionId 参数缺失' });
+        }
+
         // 获取会话仓库
         const sessionRepo = AppDataSource.getRepository(ChatSession);
-        await sessionRepo.delete({ userId, sessionId });
-        // 查找会话，确认属于当前用户
+        
+        // 1. 先查询会话，确认属于当前用户
         const session = await sessionRepo.findOne({
             where: { sessionId: sessionId, userId }
         });
+        
         if (!session) {
-            return res.status(200).json({ message: "会话不存在" });
+            return res.status(404).json({ message: '会话不存在或无权删除' });
         }
-        // 软删除：更新 status 为 2
+        
+        // 2. 软删除：更新 status 为 2
         session.status = 2;
         await sessionRepo.save(session);
+        
         res.status(200).json({
             message: '会话删除成功',
         });

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { verifyToken } from '../../../utils/jwt';
 import { validateBody } from '../../../utils/validation.middleware';
-import { webLoginDto } from './webUserInterface'; // 引入接口定义
-import { webLogin, webCreate, refUserToken, getUserList, deleteUser,webUserUpdate } from './webUserController'; // 引入接口定义
+import { webLoginDto } from './webUserInterface';
+import { webLogin, webCreate, refUserToken, getUserList, deleteUser, webUserUpdate } from './webUserController';
 
 /**
  * 用户路由
@@ -24,7 +24,7 @@ webUserRouter.get('/getUserList', verifyToken, getUserList)
 //刷新token
 webUserRouter.post('/refreshToken', refUserToken)
 
-//删除用户
-webUserRouter.get('/deleteUser', verifyToken, deleteUser)
+//删除用户（改为 DELETE 请求）
+webUserRouter.delete('/:userId', verifyToken, deleteUser)
 
 export default webUserRouter;
