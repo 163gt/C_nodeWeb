@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "nodemon -e ts --exec ts-node src/server.ts",
+    "dev:win": "set NODE_ENV=development&& nodemon -e ts --exec ts-node src/server.ts",
+    "dev:linux": "NODE_ENV=development nodemon -e ts --exec ts-node src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "start:win": "set NODE_ENV=production&& node dist/server.js",
+    "start:linux": "NODE_ENV=production node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev-typeormModel": "npx typeorm-model-generator -h localhost -d mydb -u root -x 123456 -e mysql -o ./src/entity",
     "dev-typeormModel-": "npx typeorm-model-generator -h localhost -d mydb -u root -x 123456 -e mysql -o ./src/entity"

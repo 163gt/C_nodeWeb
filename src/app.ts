@@ -1,17 +1,15 @@
-import 'reflect-metadata'; // 必须放在文件首行
+import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import { AppDataSource } from './config/database';//数据库
-import { FileService } from './files/FileService';//文件系统
+import { AppDataSource } from './config/database';
+import { FileService } from './files/FileService';
 import { fileConfig } from './config/file.config';
+import { config } from './config';
 import router from './routes';
 import webRouter from './routes/webRouter';
 import fileRouter from './routes/filesRouter';
 import { Badge } from './entity/entities/Badge';
-
-dotenv.config();
 
 // 初始化徽章数据函数
 async function initBadges(dataSource: typeof AppDataSource) {
@@ -102,7 +100,7 @@ AppDataSource.initialize()
     await initBadges(AppDataSource);
 
     console.log(`📁 文件上传目录: ${fileConfig.uploadDir}`);
-    console.log(`🌐 文件访问路径: http://localhost:${process.env.PORT || 3000}${fileConfig.servePath}`);
+    console.log(`🌐 文件访问路径: http://localhost:${config.server.port}${fileConfig.servePath}`);
 
     console.log('TypeORM 数据源已初始化');
     // 这里可以启动 express 服务
@@ -116,7 +114,7 @@ const app = express();
 
 // 中间件
 app.use(cors({
-    origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:5173', 'http://localhost:3010'],
+    origin: config.cors.origins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

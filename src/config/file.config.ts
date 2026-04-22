@@ -1,10 +1,11 @@
 // src/config/file.config.ts
 import * as path from 'path';
+import { config } from './index';
 
 export const fileConfig = {
-  uploadDir: process.env.UPLOAD_DIR || path.join(process.cwd(), 'files'),
-  servePath: process.env.SERVE_PATH || '/files',
-  maxFileSize: parseInt(String(process.env.MAX_FILE_SIZE)) || 10 * 1024 * 1024,
+  uploadDir: path.resolve(process.cwd(), config.upload.dir),
+  servePath: config.upload.servePath,
+  maxFileSize: config.upload.maxFileSize,
   allowedMimeTypes: [
     'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'
   ]
