@@ -38,7 +38,7 @@ export const uploadFile = async (req: Request, res: Response): Promise<void> => 
  */
 export const getFile = async (req: Request, res: Response): Promise<void> => {
     try {
-        const fileId = parseInt(req.params.id);
+        const fileId = parseInt(req.params.id as string);
         const file = await fileService.getFileById(fileId);
         res.json({ success: true, data: file });
     } catch (error: any) {
@@ -51,7 +51,7 @@ export const getFile = async (req: Request, res: Response): Promise<void> => {
  */
 export const deleteFile = async (req: Request, res: Response): Promise<void> => {
     try {
-        const fileId = parseInt(req.params.id);
+        const fileId = parseInt(req.params.id as string);
         const userId = (req as any).user?.userId;
         
         // 获取文件信息
