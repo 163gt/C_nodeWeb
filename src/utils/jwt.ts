@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
-dotenv.config();
+
+// 注意: dotenv 已在 src/config/index.ts 中统一加载，此处无需重复加载
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
