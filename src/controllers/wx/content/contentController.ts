@@ -13,7 +13,7 @@ export const publishContent = async (req: Request, res: Response) => {
 
   // 参数验证
   if (!badgeId || !content) {
-    return res.status(400).json({ message: '参数不完整' });
+    return res.status(400).json({ message: '内容不能为空' });
   }
 
   try {
@@ -23,6 +23,7 @@ export const publishContent = async (req: Request, res: Response) => {
       contentId: uuidv4(),
       badgeId,
       content,
+      status: null,
       likeCount: 0,
       viewCount: 0
     });
@@ -35,6 +36,7 @@ export const publishContent = async (req: Request, res: Response) => {
         contentId: newContent.contentId,
         badgeId,
         content,
+        status: newContent.status,
         createdAt: newContent.createdAt
       }
     });
@@ -68,6 +70,7 @@ export const getContentsByBadge = async (req: Request, res: Response) => {
       contentId: item.contentId,
       badgeId: item.badgeId,
       content: item.content,
+      status: item.status,
       likeCount: item.likeCount,
       viewCount: item.viewCount,
       createdAt: item.createdAt
@@ -110,6 +113,7 @@ export const getLatestContents = async (req: Request, res: Response) => {
       contentId: item.contentId,
       badgeId: item.badgeId,
       content: item.content,
+      status: item.status,
       likeCount: item.likeCount,
       viewCount: item.viewCount,
       createdAt: item.createdAt
@@ -155,6 +159,7 @@ export const getContentById = async (req: Request, res: Response) => {
         contentId: content.contentId,
         badgeId: content.badgeId,
         content: content.content,
+        status: content.status,
         likeCount: content.likeCount,
         viewCount: content.viewCount,
         createdAt: content.createdAt

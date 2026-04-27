@@ -1,6 +1,11 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { config } from './index';
+import path from 'path';
+
+const entitiesDir = config.isProduction
+  ? path.join(__dirname, '../entity/entities/*.js')
+  : path.join(__dirname, '../entity/entities/*.ts');
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -9,7 +14,7 @@ export const AppDataSource = new DataSource({
   username: config.database.username,
   password: config.database.password,
   database: config.database.database,
-  entities: [__dirname + '/../entity/entities/*.js'],
+  entities: [entitiesDir],
   synchronize: config.database.synchronize,
   logging: config.database.logging,
 });

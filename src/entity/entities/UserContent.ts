@@ -17,6 +17,9 @@ export class UserContent {
   @Column("text", { name: "content", comment: "发布内容" })
   content: string;
 
+  @Column("varchar", { name: "status", comment: "随机状态文案", length: 255, nullable: true })
+  status: string | null;
+
   @Column("int", { name: "like_count", comment: "点赞数", default: 0 })
   likeCount: number;
 

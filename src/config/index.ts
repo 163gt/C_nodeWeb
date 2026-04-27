@@ -3,8 +3,12 @@ import path from 'path';
 
 // NODE_ENV 优先，默认为 development；通过平台特定的 npm 脚本设置
 const env = process.env.NODE_ENV || 'development';
-const envFile = env === 'production' ? '.env.production' : '.env.development';
 
+// 先加载公共 .env 配置
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
+// 再加载环境特定的 .env.development 或 .env.production（会覆盖公共配置）
+const envFile = env === 'production' ? '.env.production' : '.env.development';
 dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
 export const config = {
